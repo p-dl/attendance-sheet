@@ -21,11 +21,13 @@ app.use(bodyParser.json());
 const JWT_SECRET = 'your-secret-key';
 
 // Dummy user credentials (In a real app, store securely, like in a database)
-const validTokens = new Set();
+const validTokens = new Set(); // Track active tokens
 
-// Dummy user credentials (In a real app, this would be securely stored)
-const validUsername = 'admin';
-const validPassword = 'password';
+// Dummy user credentials
+const users = [
+  { username: 'teacher', password: 'Test@321', role: 'teacher' },
+  { username: 'student', password: 'Test@123', role: 'student' },
+];
 
 // Load data from attendance.json or use default data
 function loadAttendanceData() {
@@ -60,26 +62,35 @@ function authenticateToken(req, res, next) {
     if (err) {
       return res.status(403).json({ message: 'Invalid or expired token' });
     }
-    req.user = user;
+    req.user = user; // Attach decoded user data to the request
     next();
   });
+}
+
+// Middleware to allow only teachers
+function authorizeTeacher(req, res, next) {
+  if (req.user.role !== 'teacher') {
+    return res.status(403).json({ message: 'Access restricted to teachers only' });
+  }
+  next();
 }
 
 // Route to login (authenticate user)
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
 
-  if (username === validUsername && password === validPassword) {
-    // Generate a JWT token for the user (with an 'isAdmin' flag)
-    const token = jwt.sign({ username, isAdmin: true }, JWT_SECRET, { expiresIn: '1h' });
-    validTokens.add(token); // Store the token (in a real app, use a database)
-    return res.json({ message: 'Login successful', token });
+  // Find user by username and password
+  const user = users.find((u) => u.username === username && u.password === password);
+  if (user) {
+    const token = jwt.sign({ username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
+    validTokens.add(token);
+    return res.json({ message: 'Login successful', token, role: user.role });
   }
 
   return res.status(401).json({ message: 'Invalid credentials' });
 });
 
-// Route to add a student
+// Route to add a student (accessible to both teachers and students)
 app.post('/api/add-student', authenticateToken, (req, res) => {
   const { className, studentName } = req.body;
 
@@ -97,12 +108,12 @@ app.post('/api/add-student', authenticateToken, (req, res) => {
   };
 
   attendanceData[className].students.push(newStudent);
-  saveAttendanceData();  // Save data after modifying
+  saveAttendanceData();
 
   return res.status(201).json({ message: 'Student added successfully' });
 });
 
-// Route to get attendance for a class
+// Route to get attendance for a class (accessible to all authenticated users)
 app.get('/api/get-attendance/:className', authenticateToken, (req, res) => {
   const { className } = req.params;
 
@@ -113,13 +124,11 @@ app.get('/api/get-attendance/:className', authenticateToken, (req, res) => {
   // Sort students alphabetically by name
   const sortedStudents = attendanceData[className].students.sort((a, b) => a.name.localeCompare(b.name));
 
-  // Return the sorted student list
   return res.json({ students: sortedStudents });
 });
 
-
-// Route to mark attendance
-app.post('/api/mark-attendance', authenticateToken, (req, res) => {
+// Route to mark attendance (accessible only to teachers)
+app.post('/api/mark-attendance', authenticateToken, authorizeTeacher, (req, res) => {
   const { className, studentIndex, day, status } = req.body;
 
   if (!attendanceData[className]) {
@@ -127,7 +136,6 @@ app.post('/api/mark-attendance', authenticateToken, (req, res) => {
   }
 
   const student = attendanceData[className].students[studentIndex];
-
   if (!student) {
     return res.status(404).json({ message: 'Student not found' });
   }
@@ -137,13 +145,13 @@ app.post('/api/mark-attendance', authenticateToken, (req, res) => {
   }
 
   student.attendance[day] = status;
-  saveAttendanceData();  // Save data after modifying
+  saveAttendanceData();
 
   return res.json({ message: 'Attendance updated successfully' });
 });
 
-// Route to delete a student
-app.delete('/api/delete-student', authenticateToken, (req, res) => {
+// Route to delete a student (accessible only to teachers)
+app.delete('/api/delete-student', authenticateToken, authorizeTeacher, (req, res) => {
   const { className, studentIndex } = req.body;
 
   if (!attendanceData[className]) {
@@ -151,13 +159,12 @@ app.delete('/api/delete-student', authenticateToken, (req, res) => {
   }
 
   const student = attendanceData[className].students[studentIndex];
-
   if (!student) {
     return res.status(404).json({ message: 'Student not found' });
   }
 
   attendanceData[className].students.splice(studentIndex, 1);
-  saveAttendanceData();  // Save data after modifying
+  saveAttendanceData();
 
   return res.json({ message: 'Student deleted successfully' });
 });
@@ -165,8 +172,13 @@ app.delete('/api/delete-student', authenticateToken, (req, res) => {
 // Route to logout and invalidate the token
 app.post('/api/logout', (req, res) => {
   const { token } = req.body;
-  validTokens.delete(token);
-  res.json({ message: 'Logged out successfully' });
+
+  if (validTokens.has(token)) {
+    validTokens.delete(token);
+    return res.json({ message: 'Logged out successfully' });
+  }
+
+  return res.status(400).json({ message: 'Invalid token' });
 });
 
 // Server setup
