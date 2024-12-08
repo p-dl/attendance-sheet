@@ -91,7 +91,7 @@ input[type="text"] {
     border: 1px solid #ccc;
 }
 
-button {
+.app-button {
     padding: 10px 20px;
     background-color: #ff4d4d; /* Red color for primary theme */
     color: white;
@@ -107,39 +107,6 @@ td.sticky {
     background-color: #fff;
     z-index: 1;
 }
-
-.delete-btn {
-    background: linear-gradient(135deg, #ff5f5f, #ff3b3b); /* Gradient for depth */
-    color: #fff; /* White text */
-    border: none;
-    border-radius: 50%; /* Circular shape */
-    width: 50px;
-    height: 50px;
-    font-size: 20px; /* Adjusted font size */
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adds soft shadow */
-    transition: all 0.3s ease; /* Smooth transition */
-  }
-  
-  .delete-btn:hover {
-    background: linear-gradient(135deg, #e54848, #d13636); /* Darker gradient on hover */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
-    transform: scale(1.15) rotate(10deg); /* Slight rotation and zoom */
-  }
-  
-  .delete-btn:active {
-    transform: scale(0.95); /* Press effect */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  }
-  
-  .delete-btn:focus {
-    outline: 2px solid #ff3b3b; /* Visible outline for accessibility */
-    outline-offset: 2px;
-  }
   
   
 

@@ -82,7 +82,31 @@ async function loadAttendance() {
         <td class="sticky">${studentIndex + 1}</td> <!-- Serial Number -->
         <td class="sticky">
           <button class="delete-btn" onclick="deleteStudent(${studentIndex})">
-            &#10005;
+            <svg 
+  width="60" 
+  height="60" 
+  viewBox="0 0 60 60" 
+  xmlns="http://www.w3.org/2000/svg"
+  style="cursor: pointer; transition: transform 0.3s ease;"
+  onmouseover="this.style.transform='scale(1.1)'"
+  onmouseout="this.style.transform='scale(1)'"
+>
+  <!-- Circle Background -->
+  <circle cx="30" cy="30" r="28" fill="url(#red-gradient)" stroke="#e03e3e" stroke-width="2" />
+  
+  <!-- "X" Icon -->
+  <line x1="20" y1="20" x2="40" y2="40" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <line x1="40" y1="20" x2="20" y2="40" stroke="white" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="red-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff5f5f" />
+      <stop offset="100%" stop-color="#ff3b3b" />
+    </linearGradient>
+  </defs>
+</svg>
+
           </button>
         </td>
         <td class="sticky">${student.name}</td>

@@ -1,37 +1,6 @@
 {
   "a13": {
-    "students": [
-      {
-        "name": "lkdf dsfjsdlkfj sdfsdf",
-        "attendance": [
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false,
-          false
-        ]
-      }
-    ]
+    "students": []
   },
   "a14": {
     "students": []
