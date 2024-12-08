@@ -108,23 +108,29 @@ td.sticky {
     z-index: 1;
 }
 
-/* Delete Button Styling */
 .delete-btn {
-    background: transparent;
+    background-color: #ff4d4d; /* Red color */
+    color: #ffffff; /* White text */
     border: none;
+    border-radius: 50%; /* Makes it circular */
+    width: 50px;
+    height: 50px;
+    font-size: 24px; /* Bigger '×' */
+    font-weight: bold;
     cursor: pointer;
-    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
   }
-  
-  .delete-btn i {
-    font-size: 18px;
-    color: #e74c3c; /* Red color for delete icon */
-    transition: color 0.3s ease;
+
+  .delete-btn:hover {
+    background-color: #e03e3e; /* Darker red on hover */
+    transform: scale(1.1); /* Slight zoom effect */
   }
-  
-  /* Hover effect */
-  .delete-btn:hover i {
-    color: #c0392b; /* Slightly darker red when hovering */
+
+  .delete-btn:focus {
+    outline: none; /* Removes focus outline */
   }
   
 

@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path'); // Use path module for correct file paths
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Define the correct path to the attendance.json file inside the 'data' folder
 const attendanceFilePath = path.join(__dirname, 'data', 'attendance.json');
@@ -182,6 +182,6 @@ app.post('/api/logout', (req, res) => {
 });
 
 // Server setup
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

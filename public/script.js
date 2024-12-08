@@ -22,7 +22,7 @@ function login() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
 
-  fetch('http://localhost:3000/api/login', {
+  fetch('https://orange-disco-74w775jj5q62xpgj-3000.app.github.dev/api/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ function logout() {
 async function loadAttendance() {
   const token = sessionStorage.getItem('token');
 
-  const response = await fetch(`http://localhost:3000/api/get-attendance/${currentClass}`, {
+  const response = await fetch(`https://orange-disco-74w775jj5q62xpgj-3000.app.github.dev/api/get-attendance/${currentClass}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -82,7 +82,7 @@ async function loadAttendance() {
         <td class="sticky">${studentIndex + 1}</td> <!-- Serial Number -->
         <td class="sticky">
           <button class="delete-btn" onclick="deleteStudent(${studentIndex})">
-            <i class="fas fa-trash"></i>
+            &#10005;
           </button>
         </td>
         <td class="sticky">${student.name}</td>
@@ -127,7 +127,7 @@ function handleAttendanceChange(checkbox) {
   const status = checkbox.checked;
 
   const token = sessionStorage.getItem('token');
-  fetch('http://localhost:3000/api/mark-attendance', {
+  fetch('https://orange-disco-74w775jj5q62xpgj-3000.app.github.dev/api/mark-attendance', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ function addStudent(event) {
   if (!studentName) return;
 
   const token = sessionStorage.getItem('token');
-  fetch('http://localhost:3000/api/add-student', {
+  fetch('https://orange-disco-74w775jj5q62xpgj-3000.app.github.dev/api/add-student', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ function addStudent(event) {
 // Delete student from the class
 function deleteStudent(studentIndex) {
   const token = sessionStorage.getItem('token');
-  fetch('http://localhost:3000/api/delete-student', {
+  fetch('https://orange-disco-74w775jj5q62xpgj-3000.app.github.dev/api/delete-student', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
